@@ -1,0 +1,44 @@
+name: Export DrawIO to PNG
+
+on:
+  push:
+    paths:
+      - docs/Netwerk Lommers.drawio
+      - .github/workflows/export-drawio.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  export-and-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Export DrawIO file to PNG
+        run: |
+          docker run --rm \
+            -v "$PWD:/data" \
+            rlespinasse/drawio-desktop-headless \
+            --export \
+            --format png \
+            --output "/data/docs/network-diagram.png" \
+            "/data/docs/network-diagram.drawio"
+
+      - name: Commit generated PNG if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add "docs/Netwerk Lommers.png"
+
+          if git diff --cached --quiet; then
+            echo "No PNG changes to commit."
+            exit 0
+          fi
+
+          git commit -m "chore(docs): export drawio to png"
+          git push

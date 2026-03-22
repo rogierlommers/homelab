@@ -12,3 +12,6 @@ vault_password_file
 
 # MacOS specific files
 .DS_Store
+
+# draw.io files
+*.bkp
