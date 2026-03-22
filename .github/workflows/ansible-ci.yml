@@ -29,5 +29,11 @@ jobs:
       - name: Install required Ansible collections
         run: ansible-galaxy collection install community.general
 
+      - name: Create CI Ansible config without vault password file
+        run: |
+          grep -vE '^\s*vault_password_file\s*=' ansible.cfg > ansible-ci.cfg
+
       - name: Ansible playbook syntax check
+        env:
+          ANSIBLE_CONFIG: ansible-ci.cfg
         run: ansible-playbook --syntax-check -i inventory/hosts.yml playbook.yml
