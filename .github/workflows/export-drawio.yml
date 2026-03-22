@@ -3,7 +3,7 @@ name: Export DrawIO to PNG
 on:
   push:
     paths:
-      - docs/Netwerk Lommers.drawio
+      - docs/network-diagram.drawio
       - .github/workflows/export-drawio.yml
   workflow_dispatch:
 
