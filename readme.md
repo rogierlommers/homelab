@@ -67,7 +67,12 @@ ansible-playbook playbook.yml -i "192.168.1.224,"
 
 ## Encrypting passwords / files
 
-Password file should be in home directory, see vault_password_file. Password is stored in password manager.
+The vault password file is stored in this repository as `.vault_pass` (ignored by git).
+Create/update it locally and lock down permissions:
+
+```bash
+chmod 600 .vault_pass
+```
 
 ```
 ansible-vault encrypt roles/ssh/templates/id_ed25519.pub.j2
