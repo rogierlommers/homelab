@@ -1,0 +1,73 @@
+---
+
+- name: create /srv/local
+  file:
+    path: /srv/local
+    state: directory
+    owner: "rlommers"
+    group: "rlommers"
+
+- name: create /srv/nas
+  file:
+    path: /srv/nas
+    state: directory
+    owner: "rlommers"
+    group: "rlommers"
+
+# NFS SERVER PARTS
+####################################################
+- name: install nfs-kernel-server package
+  apt:
+    name:
+    - nfs-kernel-server
+    - nfs-common
+    state: latest
+    update_cache: yes
+
+# create /etc/exports file as root
+- name: configuring NFS exports
+  template:
+    src: exports-nas-nijmegen.j2
+    dest: /etc/exports
+    owner: root
+    group: root
+    mode: 0644
+    force: true
+
+# apply exports by running sudo exportfs -ra
+- name: apply NFS exports
+  command: exportfs -ra
+
+# start nfs service by running sudo systemctl enable --now nfs-server
+- name: start NFS server service, if not started
+  ansible.builtin.service:
+    name: nfs-server
+    state: started
+
+# CRONJOB PARTS
+
+# scheduled file deletions
+
+- name: crontab for scheduled file deletions
+  ansible.builtin.cron:
+    name: "crontab for scheduled file deletions"
+    # daily
+    minute: "0"
+    hour: "0"
+    day: "*"
+    weekday: "*"
+    user: rlommers
+    job: "/home/rlommers/scripts/scheduled-deletions.sh"
+
+# file system backup to Hertzner ####################
+
+- name: crontab for purging and checking hetzner
+  ansible.builtin.cron:
+    name: "crontab for purging and checking hetzner"
+    # every Sunday at 06:00
+    minute: "0"
+    hour: "6"
+    day: "*"
+    weekday: "0"
+    user: rlommers
+    job: "/home/rlommers/scripts/restic-backup-hetzner.sh forget_and_check && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_purge_hetzner_uuid }}"

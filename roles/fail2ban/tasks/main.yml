@@ -1,0 +1,14 @@
+# unban ip: sudo fail2ban-client set sshd unbanip 192.168.1.222
+# check banned clients: sudo fail2ban-client status sshd
+
+- name: Install fail2ban
+  apt: name={{ item }} state=latest update_cache=yes
+  loop: [ 'fail2ban' ]
+- name: install custom fail2ban file (for mail)
+  template:
+    src: templates/customisation.local.j2
+    dest: /etc/fail2ban/jail.d/customisation.local
+- name: Restart fail2ban
+  service:
+    name: 'fail2ban'
+    state: 'restarted'

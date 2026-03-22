@@ -1,0 +1,44 @@
+---
+- name: Update apt cache and upgrade packages
+  apt:
+    update_cache: yes
+    upgrade: dist
+    cache_valid_time: 3600
+
+- name: Install essential tools
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates    
+      - restic
+      - tmux
+      - jq
+      - gnupg
+      - lsb-release
+      - zsh
+      - starship
+      - curl
+      - git
+      - vim
+      - htop
+      - sudo
+      - net-tools
+      - mc
+      - cron
+    state: present
+
+- name: Set timezone to Europe/Amsterdam
+  timezone:
+    name: Europe/Amsterdam
+
+- name: Add a setting to ~/.gitconfig
+  community.general.git_config:
+    name: alias.st
+    scope: global
+    value: status
+
+- name: Add a setting to ~/.gitconfig
+  community.general.git_config:
+    name: core.editor
+    scope: global
+    value: vim

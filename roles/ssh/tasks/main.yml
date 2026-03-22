@@ -1,0 +1,99 @@
+---
+
+- name: Ensure .ssh directory exists
+  become: false
+  file:
+    path: "/home/rlommers/.ssh"
+    state: directory
+    mode: '0700'
+
+- name: write id_ed25519 file
+  become: false
+  template:
+    src: id_ed25519.j2
+    dest: "/home/rlommers/.ssh/id_ed25519"
+    mode: '0600'
+
+- name: write id_ed25519.pub file
+  become: false
+  template:
+    src: id_ed25519.pub.j2
+    dest: "/home/rlommers/.ssh/id_ed25519.pub"
+    mode: '0644'
+
+- name: write id_ed25519 file for hetzner
+  become: false
+  template:
+    src: id_ed25519_hetzner.j2
+    dest: "/home/rlommers/.ssh/hetzner"
+    mode: '0600'
+
+- name: write id_ed25519.pub file for hetzner
+  become: false
+  template:
+    src: id_ed25519.pub_hetzner.j2
+    dest: "/home/rlommers/.ssh/hetzner.pub"
+    mode: '0644'
+
+- name: Creating local SSH config files
+  become: false
+  template:
+    src: ssh_config.j2
+    dest: "/home/rlommers/.ssh/config"
+    mode: '0644'
+
+- name: Add SSH config for hetzner
+  become: false
+  blockinfile:
+    path: "/home/rlommers/.ssh/config"
+    create: yes
+    mode: '0644'
+    block: |
+      Host u475481.your-storagebox.de
+        HostName u475481.your-storagebox.de
+        User u475481
+        IdentityFile ~/.ssh/hetzner
+        Port 23
+
+- name: disable root login over SSH
+  become: true
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitRootLogin"
+    line: "PermitRootLogin no"
+    state: present
+  register: ssh_root
+
+- name: disable password login
+  become: true
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication"
+    line: "PasswordAuthentication no"
+    state: present
+  register: ssh_pwd
+
+- name: disable x11 forwarding
+  become: true
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^X11Forwarding"
+    line: "X11Forwarding no"
+    state: present
+  register: ssh_x11
+
+- name: disable empty passwords in general
+  become: true
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitEmptyPasswords"
+    line: "PermitEmptyPasswords no"
+    state: present
+  register: ssh_empty
+
+- name: restart sshd if configuration changed
+  become: true
+  service:
+    name: sshd
+    state: restarted
+  when: ssh_root.changed or ssh_pwd.changed or ssh_x11.changed or ssh_empty.changed

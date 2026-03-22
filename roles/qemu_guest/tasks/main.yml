@@ -1,0 +1,16 @@
+---
+
+# PLEASE NOTICE: VM NEEDS TO BE RESTARTED
+# REBOOT OF OS IS NOT ENOUGH
+
+- name: Install quemy guest package
+  apt: name={{ item }} state=latest update_cache=yes
+  loop: [ 'qemu-guest-agent' ]
+
+- name: configure systemd to use enable qemu-guest-agent
+  ignore_errors: yes
+  systemd:
+    daemon_reload: yes
+    enabled: yes
+    state: started
+    name: qemu-guest-agent.service

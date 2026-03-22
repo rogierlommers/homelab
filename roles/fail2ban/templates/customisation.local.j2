@@ -1,0 +1,9 @@
+[DEFAULT]
+ignoreip = 127.0.0.0
+bantime  = 86400s
+findtime  = 120s
+destemail = {{ my_email }}
+sender = {{ my_email }}
+sendername = Fail2ban
+mta = sendmail
+action = %(action_mwl)s

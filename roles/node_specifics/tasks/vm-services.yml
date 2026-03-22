@@ -1,0 +1,59 @@
+---
+
+- name: installation of docker
+  include_tasks: install-docker.yml
+
+- name: create /srv/local
+  ansible.builtin.file:
+    path: /srv/local
+    state: directory
+    owner: "rlommers"
+    group: "rlommers"
+
+# CRONJOB PARTS
+
+- name: crontab for backing up to hetzner
+  ansible.builtin.cron:
+    name: "crontab for backing up to hetzner"
+    # daily at 03:30
+    minute: "30"
+    hour: "3"
+    day: "*"
+    weekday: "*"
+    job: "docker compose -f /srv/local/compose.yml down > /dev/null 2>&1 && /home/rlommers/scripts/restic-backup-hetzner.sh backup quiet && docker compose -f /srv/local/compose.yml up -d --remove-orphans > /dev/null 2>&1 && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_backup_hetzner_uuid }}"
+    user: rlommers
+
+- name: crontab for creating xml feed file
+  ansible.builtin.cron:
+    name: "run xml feed file script"
+    # each hour at 15 minutes past the hour
+    minute: "15"
+    hour: "*"
+    job: "/usr/bin/docker exec spotweb /usr/bin/curl --globoff --fail --silent --show-error 'http://services.hake-cod.ts.net:7004?page=rss&search\%5Btree\%5D=cat0_z3_d75,cat0_z3_d23&sortdir=DESC&sortby=stamp' -o /app/images/spotweb.xml && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_xml_feed_uuid }}"
+    user: rlommers
+
+# NFS MOUNTS / CLIENT PART
+
+- name: ensure NFS client packages are installed
+  ansible.builtin.package:
+    name: nfs-common
+    state: present
+
+- name: ensure mount point exists
+  ansible.builtin.file:
+    path: /srv/nas
+    state: directory
+    owner: "rlommers"
+    group: "rlommers"
+    mode: '0755'
+
+- name: Mount NFSv4 share and ensure it persists in fstab
+  ansible.posix.mount:
+    path: /srv/nas
+    src: "192.168.1.101:/srv/nas"
+    fstype: nfs4
+    opts: "noauto,x-systemd.automount,x-systemd.idle-timeout=1min,_netdev,nofail"
+    state: mounted
+    boot: false
+    dump: 0
+    passno: 0

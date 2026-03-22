@@ -1,0 +1,109 @@
+---
+
+# chsh -s /bin/zsh rlommers
+- name: ensure default shell is /bin/zsh
+  become: true
+  ansible.builtin.user:
+    name: "rlommers"
+    shell: /bin/zsh
+
+- name: Ensure .config directory exists
+  become: false
+  file:
+    path: "/home/rlommers/.config"
+    state: directory
+    mode: '0755'
+
+- name: Clone dotfiles repository
+  become: false
+  ansible.builtin.git:
+    repo: "git@github.com:rogierlommers/dotfiles.git"
+    dest: "/home/rlommers/dotfiles"
+    force: true
+    accept_hostkey: yes
+
+# git clone --depth 1 https://github.com/mattmc3/antidote.git ~/.antidote
+- name: Clone antidote
+  become: false
+  ansible.builtin.git:
+    repo: "https://github.com/mattmc3/antidote.git"
+    dest: "/home/rlommers/.antidote"
+    depth: 1
+
+# ln -s ~/dotfiles/dotfiles/scripts ~/scripts
+- name: Symlink scripts directory
+  become: false
+  file:
+    src: "/home/rlommers/dotfiles/dotfiles/scripts"
+    dest: "/home/rlommers/scripts"
+    state: link
+
+# ln -s ~/dotfiles/dotfiles/tmux/.tmux.conf ~/.tmux.conf
+- name: Symlink tmux.conf file
+  become: false
+  file:
+    src: "/home/rlommers/dotfiles/dotfiles/tmux/.tmux.conf"
+    dest: "/home/rlommers/.tmux.conf"
+    state: link
+
+# ln -s ~/dotfiles/dotfiles/zsh/.zshrc_linux ~/.zshrc
+- name: Symlink zshc file
+  become: false
+  file:
+    src: "/home/rlommers/dotfiles/dotfiles/zsh/.zshrc_linux"
+    dest: "/home/rlommers/.zshrc"
+    state: link
+
+# ln -s ~/dotfiles/dotfiles/zsh/.zsh_aliases.sh ~/.zsh_aliases.sh
+- name: Symlink zshc aliases file
+  become: false
+  file:
+    src: "/home/rlommers/dotfiles/dotfiles/zsh/.zsh_aliases.sh"
+    dest: "/home/rlommers/.zsh_aliases.sh"
+    state: link
+
+# ln -s ~/dotfiles/dotfiles/zsh/.zsh_functions.sh ~/.zsh_functions.sh
+- name: Symlink zshc functions file
+  become: false
+  file:
+    src: "/home/rlommers/dotfiles/dotfiles/zsh/.zsh_functions.sh"
+    dest: "/home/rlommers/.zsh_functions.sh"
+    state: link
+
+# ln -s ~/dotfiles/dotfiles/zsh/.zsh_plugins.txt ~/.zsh_plugins.txt
+- name: Symlink zshc plugins file
+  become: false
+  file:
+    src: "/home/rlommers/dotfiles/dotfiles/zsh/.zsh_plugins.txt"
+    dest: "/home/rlommers/.zsh_plugins.txt"
+    state: link
+
+# ln -s ~/dotfiles/dotfiles/zsh/.zsh_config.sh ~/.zsh_config.sh
+- name: Symlink zshc config file
+  become: false
+  file:
+    src: "/home/rlommers/dotfiles/dotfiles/zsh/.zsh_config.sh"
+    dest: "/home/rlommers/.zsh_config.sh"
+    state: link
+
+# ln -s ~/dotfiles/dotfiles/starship/config.toml ~/.config/starship.toml
+- name: Symlink starship config file
+  become: false
+  file:
+    src: "/home/rlommers/dotfiles/dotfiles/starship/config.toml"
+    dest: "/home/rlommers/.config/starship.toml"
+    state: link
+
+# ln -s ~/dotfiles/dotfiles/ripgrep/.ripgrep.conf ~/.ripgrep.conf
+- name: Symlink ripgrep config file
+  become: false
+  file:
+    src: "/home/rlommers/dotfiles/dotfiles/ripgrep/.ripgrep.conf"
+    dest: "/home/rlommers/.ripgrep.conf"
+    state: link
+
+- name: Add scripts directory to path
+  become: true
+  copy:
+    dest: /etc/profile.d/custom-path.sh
+    content: 'PATH=$PATH:/home/rlommers/scripts'

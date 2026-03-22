@@ -1,0 +1,33 @@
+---
+
+# root
+- name: add email address to crontab (root)
+  community.general.cronvar:
+    name: MAILTO
+    value: "{{ my_email }}"
+
+- name: add FROM email address to crontab (root)
+  community.general.cronvar:
+    name: MAILFROM
+    value: "{{ my_email }}"
+
+# normal user
+- name: add email address to crontab (normal user)
+  community.general.cronvar:
+    name: MAILTO
+    value: "{{ my_email }}"
+    user: rlommers
+
+- name: add FROM email address to crontab (normal user)
+  community.general.cronvar:
+    name: MAILFROM
+    value: "{{ my_email }}"
+    user: rlommers
+
+# host specific
+
+- include_tasks: vm-services.yml
+  when: ansible_facts['nodename'] == "services"
+
+- include_tasks: vm-nas-nijmegen.yml
+  when: ansible_facts['nodename'] == "nas-nijmegen"

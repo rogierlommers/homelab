@@ -1,0 +1,12 @@
+---
+- name: Provision Debian Servers
+  hosts: all
+  become: yes
+  roles:
+    - common
+    - ssh
+    - dotfiles
+    - qemu_guest
+    - ssmtp
+    - fail2ban
+    - node_specifics

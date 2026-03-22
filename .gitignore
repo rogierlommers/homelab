@@ -1,0 +1,14 @@
+# Ansible retry files
+*.retry
+
+# Vault password file (should never be committed)
+.vault_pass
+.ansible_vault_pass
+vault_password_file
+
+# Local overrides
+*.local.yml
+*.local.yaml
+
+# MacOS specific files
+.DS_Store
