@@ -31,7 +31,9 @@ jobs:
       - name: Commit generated PNG if changed
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          bot_email_user="41898282+github-actions[bot]"
+          bot_email_domain="users.noreply.github.com"
+          git config user.email "${bot_email_user}@${bot_email_domain}"
 
           git add "docs/network-diagram.png"
 

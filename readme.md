@@ -36,6 +36,12 @@ qm resize 107 scsi0 16G
 qm start 107
 ```
 
+## Network diagram
+
+(file will be generated during CI/CD pipeline)
+
+![Network diagram](docs/network-diagram.png)
+
 ## Ansible configuration
 
 - **Inventory**: The static IP addresses of your VMs are defined in `inventory/hosts.yml`.
