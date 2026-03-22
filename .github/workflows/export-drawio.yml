@@ -33,7 +33,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add "docs/Netwerk Lommers.png"
+          git add "docs/network-diagram.png"
 
           if git diff --cached --quiet; then
             echo "No PNG changes to commit."
