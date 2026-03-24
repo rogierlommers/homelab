@@ -32,6 +32,17 @@
     job: "/usr/bin/docker exec spotweb /usr/bin/curl --globoff --fail --silent --show-error 'http://services.hake-cod.ts.net:7004?page=rss&search\\%5Btree\\%5D=cat0_z3_d75,cat0_z3_d23&sortdir=DESC&sortby=stamp' -o /app/images/spotweb.xml && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_xml_feed_uuid }}"
     user: rlommers
 
+- name: crontab for backing up bookmarks
+  ansible.builtin.cron:
+    name: "run bookmarks backup script"
+    # daily at 00:15
+    minute: "15"
+    hour: "0"
+    day: "*"
+    weekday: "*"
+    job: "/home/rlommers/scripts/backup-bookmarks.sh && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_backup_bookmarks_uuid }}"
+    user: rlommers
+
 # NFS MOUNTS / CLIENT PART
 
 - name: ensure NFS client packages are installed
