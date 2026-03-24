@@ -40,7 +40,7 @@
     hour: "0"
     day: "*"
     weekday: "*"
-    job: "/home/rlommers/scripts/backup-bookmarks.sh && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_backup_bookmarks_uuid }}"
+    job: "DEBUG=1 /home/rlommers/scripts/backup-bookmarks.sh && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_backup_bookmarks_uuid }}"
     user: rlommers
 
 # NFS MOUNTS / CLIENT PART
