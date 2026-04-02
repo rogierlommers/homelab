@@ -1,6 +1,15 @@
 # To encrypt: ansible-vault encrypt_string 'YOUR-UUID-HERE' --name 'hc_backup_hetzner_uuid'
 
 ---
+# Network
+nas_ip: "192.168.1.101"
+nfs_allowed_network: "192.168.1.0/24"
+
+# Hetzner storage box
+hetzner_storagebox_host: "u475481.your-storagebox.de"
+hetzner_storagebox_user: "u475481"
+hetzner_storagebox_port: 23
+
 # Various widely used variables
 my_email: !vault |
           $ANSIBLE_VAULT;1.1;AES256

@@ -1,16 +1,22 @@
 ---
 
-# PLEASE NOTICE: VM NEEDS TO BE RESTARTED
+# PLEASE NOTICE: VM NEEDS TO BE RESTARTED AFTER FIRST INSTALL
 # REBOOT OF OS IS NOT ENOUGH
 
-- name: Install quemy guest package
-  apt: name={{ item }} state=latest update_cache=yes
-  loop: [ 'qemu-guest-agent' ]
+- name: Install qemu-guest-agent package
+  ansible.builtin.apt:
+    name: qemu-guest-agent
+    state: present
+    update_cache: true
+  tags: [packages, qemu]
 
-- name: configure systemd to use enable qemu-guest-agent
-  ignore_errors: yes
-  systemd:
-    daemon_reload: yes
-    enabled: yes
+- name: Enable and start qemu-guest-agent service
+  # ignore_errors because the service may fail to start if the hypervisor
+  # has not yet enabled the guest agent channel (requires VM restart)
+  ignore_errors: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+    enabled: true
     state: started
     name: qemu-guest-agent.service
+  tags: [qemu]

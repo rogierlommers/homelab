@@ -1,33 +1,35 @@
 ---
 
-# root
-- name: add email address to crontab (root)
+- name: Add email address to root crontab (MAILTO)
   community.general.cronvar:
     name: MAILTO
     value: "{{ my_email }}"
+  tags: [cron]
 
-- name: add FROM email address to crontab (root)
+- name: Add FROM email address to root crontab (MAILFROM)
   community.general.cronvar:
     name: MAILFROM
     value: "{{ my_email }}"
+  tags: [cron]
 
-# normal user
-- name: add email address to crontab (normal user)
+- name: Add email address to user crontab (MAILTO)
   community.general.cronvar:
     name: MAILTO
     value: "{{ my_email }}"
     user: rlommers
+  tags: [cron]
 
-- name: add FROM email address to crontab (normal user)
+- name: Add FROM email address to user crontab (MAILFROM)
   community.general.cronvar:
     name: MAILFROM
     value: "{{ my_email }}"
     user: rlommers
+  tags: [cron]
 
-# host specific
-
-- include_tasks: vm-services.yml
+- name: Apply node-specific tasks for services VM
+  ansible.builtin.include_tasks: vm-services.yml
   when: ansible_facts['nodename'] == "services"
 
-- include_tasks: vm-nas-nijmegen.yml
+- name: Apply node-specific tasks for nas-nijmegen VM
+  ansible.builtin.include_tasks: vm-nas-nijmegen.yml
   when: ansible_facts['nodename'] == "nas-nijmegen"

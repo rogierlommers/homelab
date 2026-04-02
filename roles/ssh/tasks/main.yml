@@ -2,98 +2,102 @@
 
 - name: Ensure .ssh directory exists
   become: false
-  file:
+  ansible.builtin.file:
     path: "/home/rlommers/.ssh"
     state: directory
     mode: '0700'
+  tags: [ssh]
 
-- name: write id_ed25519 file
+- name: Write id_ed25519 private key
   become: false
-  template:
+  ansible.builtin.template:
     src: id_ed25519.j2
     dest: "/home/rlommers/.ssh/id_ed25519"
     mode: '0600'
+  tags: [ssh]
 
-- name: write id_ed25519.pub file
+- name: Write id_ed25519 public key
   become: false
-  template:
+  ansible.builtin.template:
     src: id_ed25519.pub.j2
     dest: "/home/rlommers/.ssh/id_ed25519.pub"
     mode: '0644'
+  tags: [ssh]
 
-- name: write id_ed25519 file for hetzner
+- name: Write Hetzner private key
   become: false
-  template:
+  ansible.builtin.template:
     src: id_ed25519_hetzner.j2
     dest: "/home/rlommers/.ssh/hetzner"
     mode: '0600'
+  tags: [ssh]
 
-- name: write id_ed25519.pub file for hetzner
+- name: Write Hetzner public key
   become: false
-  template:
+  ansible.builtin.template:
     src: id_ed25519.pub_hetzner.j2
     dest: "/home/rlommers/.ssh/hetzner.pub"
     mode: '0644'
+  tags: [ssh]
 
-- name: Creating local SSH config files
+- name: Write SSH client config
   become: false
-  template:
+  ansible.builtin.template:
     src: ssh_config.j2
     dest: "/home/rlommers/.ssh/config"
     mode: '0644'
+  tags: [ssh]
 
-- name: Add SSH config for hetzner
+- name: Add Hetzner storage box SSH config block
   become: false
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: "/home/rlommers/.ssh/config"
-    create: yes
+    create: true
     mode: '0644'
     block: |
-      Host u475481.your-storagebox.de
-        HostName u475481.your-storagebox.de
-        User u475481
+      Host {{ hetzner_storagebox_host }}
+        HostName {{ hetzner_storagebox_host }}
+        User {{ hetzner_storagebox_user }}
         IdentityFile ~/.ssh/hetzner
-        Port 23
+        Port {{ hetzner_storagebox_port }}
+  tags: [ssh]
 
-- name: disable root login over SSH
+- name: Disable root login over SSH
   become: true
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: "^PermitRootLogin"
     line: "PermitRootLogin no"
     state: present
-  register: ssh_root
+  notify: Restart sshd
+  tags: [ssh, security]
 
-- name: disable password login
+- name: Disable password authentication
   become: true
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: "^PasswordAuthentication"
     line: "PasswordAuthentication no"
     state: present
-  register: ssh_pwd
+  notify: Restart sshd
+  tags: [ssh, security]
 
-- name: disable x11 forwarding
+- name: Disable X11 forwarding
   become: true
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: "^X11Forwarding"
     line: "X11Forwarding no"
     state: present
-  register: ssh_x11
+  notify: Restart sshd
+  tags: [ssh, security]
 
-- name: disable empty passwords in general
+- name: Disable empty passwords
   become: true
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: "^PermitEmptyPasswords"
     line: "PermitEmptyPasswords no"
     state: present
-  register: ssh_empty
-
-- name: restart sshd if configuration changed
-  become: true
-  service:
-    name: sshd
-    state: restarted
-  when: ssh_root.changed or ssh_pwd.changed or ssh_x11.changed or ssh_empty.changed
+  notify: Restart sshd
+  tags: [ssh, security]

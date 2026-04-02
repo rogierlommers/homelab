@@ -1,67 +1,69 @@
 ---
 
-- name: create /srv/local
-  file:
+- name: Create /srv/local directory
+  ansible.builtin.file:
     path: /srv/local
     state: directory
     owner: "rlommers"
     group: "rlommers"
+  tags: [nfs, system]
 
-- name: create /srv/nas
-  file:
+- name: Create /srv/nas directory
+  ansible.builtin.file:
     path: /srv/nas
     state: directory
     owner: "rlommers"
     group: "rlommers"
+  tags: [nfs, system]
 
 # NFS SERVER PARTS
 ####################################################
-- name: install nfs-kernel-server package
-  apt:
+- name: Install NFS server packages
+  ansible.builtin.apt:
     name:
-    - nfs-kernel-server
-    - nfs-common
-    state: latest
-    update_cache: yes
+      - nfs-kernel-server
+      - nfs-common
+    state: present
+    update_cache: true
+  tags: [packages, nfs]
 
-# create /etc/exports file as root
-- name: configuring NFS exports
-  template:
+- name: Configure NFS exports
+  ansible.builtin.template:
     src: exports-nas-nijmegen.j2
     dest: /etc/exports
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
     force: true
+  tags: [nfs]
 
-# apply exports by running sudo exportfs -ra
-- name: apply NFS exports
-  command: exportfs -ra
+- name: Apply NFS exports
+  ansible.builtin.command: exportfs -ra
+  changed_when: false
+  tags: [nfs]
 
-# start nfs service by running sudo systemctl enable --now nfs-server
-- name: start NFS server service, if not started
+- name: Ensure NFS server service is started
   ansible.builtin.service:
     name: nfs-server
     state: started
+    enabled: true
+  tags: [nfs]
 
 # CRONJOB PARTS
 
-# scheduled file deletions
-
-- name: crontab for scheduled file deletions
+- name: Cron job for scheduled file deletions
   ansible.builtin.cron:
     name: "crontab for scheduled file deletions"
-    # daily
+    # daily at 00:00
     minute: "0"
     hour: "0"
     day: "*"
     weekday: "*"
     user: rlommers
     job: "/home/rlommers/scripts/scheduled-deletions.sh"
+  tags: [cron, backup]
 
-# file system backup to Hertzner ####################
-
-- name: crontab for purging and checking hetzner
+- name: Cron job for purging and checking Hetzner backups
   ansible.builtin.cron:
     name: "crontab for purging and checking hetzner"
     # every Sunday at 06:00
@@ -71,3 +73,4 @@
     weekday: "0"
     user: rlommers
     job: "/home/rlommers/scripts/restic-backup-hetzner.sh forget_and_check && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_purge_hetzner_uuid }}"
+  tags: [cron, backup]

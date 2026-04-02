@@ -2,13 +2,15 @@
 # check banned clients: sudo fail2ban-client status sshd
 
 - name: Install fail2ban
-  apt: name={{ item }} state=latest update_cache=yes
-  loop: [ 'fail2ban' ]
-- name: install custom fail2ban file (for mail)
-  template:
-    src: templates/customisation.local.j2
+  ansible.builtin.apt:
+    name: fail2ban
+    state: present
+    update_cache: true
+  tags: [packages, fail2ban, security]
+
+- name: Install custom fail2ban jail configuration
+  ansible.builtin.template:
+    src: customisation.local.j2
     dest: /etc/fail2ban/jail.d/customisation.local
-- name: Restart fail2ban
-  service:
-    name: 'fail2ban'
-    state: 'restarted'
+  notify: Restart fail2ban
+  tags: [fail2ban, security]

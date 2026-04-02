@@ -1,11 +1,13 @@
 ---
 
 - name: Install ssmtp package
-  apt:
+  ansible.builtin.apt:
     name: ssmtp
     state: present
+  tags: [packages, ssmtp]
 
-- name: write ssmtp.conf file
-  template:
+- name: Write ssmtp.conf configuration
+  ansible.builtin.template:
     src: ssmtp.conf.j2
     dest: /etc/ssmtp/ssmtp.conf
+  tags: [ssmtp]

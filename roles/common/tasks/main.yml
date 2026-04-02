@@ -1,15 +1,16 @@
 ---
 - name: Update apt cache and upgrade packages
-  apt:
-    update_cache: yes
+  ansible.builtin.apt:
+    update_cache: true
     upgrade: dist
     cache_valid_time: 3600
+  tags: [packages, system]
 
 - name: Install essential tools
-  apt:
+  ansible.builtin.apt:
     name:
       - apt-transport-https
-      - ca-certificates    
+      - ca-certificates
       - restic
       - tmux
       - jq
@@ -26,19 +27,23 @@
       - mc
       - cron
     state: present
+  tags: [packages]
 
 - name: Set timezone to Europe/Amsterdam
-  timezone:
+  community.general.timezone:
     name: Europe/Amsterdam
+  tags: [system]
 
-- name: Add a setting to ~/.gitconfig
+- name: Set git alias st to status
   community.general.git_config:
     name: alias.st
     scope: global
     value: status
+  tags: [dotfiles]
 
-- name: Add a setting to ~/.gitconfig
+- name: Set git default editor to vim
   community.general.git_config:
     name: core.editor
     scope: global
     value: vim
+  tags: [dotfiles]
