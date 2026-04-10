@@ -48,6 +48,18 @@
     user: rlommers
   tags: [cron, backup]
 
+- name: Cron job for backing up miniflux
+  ansible.builtin.cron:
+    name: "run miniflux backup script"
+    # daily at 00:30
+    minute: "30"
+    hour: "0"
+    day: "*"
+    weekday: "*"
+    job: "/home/rlommers/scripts/backup-miniflux.sh backup && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_backup_miniflux_uuid }}"
+    user: rlommers
+  tags: [cron, backup]
+
 # NFS MOUNTS / CLIENT PART
 
 - name: Ensure NFS client packages are installed
