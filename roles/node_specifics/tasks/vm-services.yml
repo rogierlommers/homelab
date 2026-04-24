@@ -56,7 +56,7 @@
     hour: "0"
     day: "*"
     weekday: "*"
-    job: "/home/rlommers/scripts/backup-miniflux.sh backup && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_backup_miniflux_uuid }}"
+    job: "/srv/local/miniflux/backup-miniflux.sh backup && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_backup_miniflux_uuid }}"
     user: rlommers
   tags: [cron, backup]
 
