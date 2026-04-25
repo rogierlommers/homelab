@@ -36,18 +36,6 @@
     user: rlommers
   tags: [cron]
 
-- name: Cron job for backing up bookmarks
-  ansible.builtin.cron:
-    name: "run bookmarks backup script"
-    # daily at 00:15
-    minute: "15"
-    hour: "0"
-    day: "*"
-    weekday: "*"
-    job: "DEBUG=0 /home/rlommers/scripts/backup-bookmarks.sh && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_backup_bookmarks_uuid }}"
-    user: rlommers
-  tags: [cron, backup]
-
 - name: Cron job for backing up miniflux
   ansible.builtin.cron:
     name: "run miniflux backup script"
