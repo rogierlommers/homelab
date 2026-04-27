@@ -74,3 +74,15 @@
     user: rlommers
     job: "/home/rlommers/scripts/restic-backup-hetzner.sh forget_and_check && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_purge_hetzner_uuid }}"
   tags: [cron, backup]
+
+- name: Cron job for backing up to Edwin
+  ansible.builtin.cron:
+    name: "crontab for backing up to edwin"
+    # daily at 03:30
+    minute: "30"
+    hour: "3"
+    day: "*"
+    weekday: "*"
+    job: "/home/rlommers/scripts/restic-backup-edwin.sh backup quiet && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_backup_edwin_uuid }}"
+    user: rlommers
+  tags: [cron, backup]
