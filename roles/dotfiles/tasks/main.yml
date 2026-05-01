@@ -41,6 +41,7 @@
     src: "/home/rlommers/dotfiles/dotfiles/scripts"
     dest: "/home/rlommers/scripts"
     state: link
+    force: true
   tags: [dotfiles]
 
 # ln -s ~/dotfiles/dotfiles/tmux/.tmux.conf ~/.tmux.conf
@@ -50,6 +51,7 @@
     src: "/home/rlommers/dotfiles/dotfiles/tmux/.tmux.conf"
     dest: "/home/rlommers/.tmux.conf"
     state: link
+    force: true
   tags: [dotfiles]
 
 # ln -s ~/dotfiles/dotfiles/zsh/.zshrc_linux ~/.zshrc
@@ -59,6 +61,7 @@
     src: "/home/rlommers/dotfiles/dotfiles/zsh/.zshrc_linux"
     dest: "/home/rlommers/.zshrc"
     state: link
+    force: true
   tags: [dotfiles]
 
 # ln -s ~/dotfiles/dotfiles/zsh/.zsh_aliases.sh ~/.zsh_aliases.sh
@@ -68,6 +71,7 @@
     src: "/home/rlommers/dotfiles/dotfiles/zsh/.zsh_aliases.sh"
     dest: "/home/rlommers/.zsh_aliases.sh"
     state: link
+    force: true
   tags: [dotfiles]
 
 # ln -s ~/dotfiles/dotfiles/zsh/.zsh_functions.sh ~/.zsh_functions.sh
@@ -77,6 +81,7 @@
     src: "/home/rlommers/dotfiles/dotfiles/zsh/.zsh_functions.sh"
     dest: "/home/rlommers/.zsh_functions.sh"
     state: link
+    force: true
   tags: [dotfiles]
 
 # ln -s ~/dotfiles/dotfiles/zsh/.zsh_plugins.txt ~/.zsh_plugins.txt
@@ -86,6 +91,7 @@
     src: "/home/rlommers/dotfiles/dotfiles/zsh/.zsh_plugins.txt"
     dest: "/home/rlommers/.zsh_plugins.txt"
     state: link
+    force: true
   tags: [dotfiles]
 
 # ln -s ~/dotfiles/dotfiles/zsh/.zsh_config.sh ~/.zsh_config.sh
@@ -95,6 +101,7 @@
     src: "/home/rlommers/dotfiles/dotfiles/zsh/.zsh_config.sh"
     dest: "/home/rlommers/.zsh_config.sh"
     state: link
+    force: true
   tags: [dotfiles]
 
 # ln -s ~/dotfiles/dotfiles/starship/config.toml ~/.config/starship.toml
@@ -104,6 +111,7 @@
     src: "/home/rlommers/dotfiles/dotfiles/starship/config.toml"
     dest: "/home/rlommers/.config/starship.toml"
     state: link
+    force: true
   tags: [dotfiles]
 
 # ln -s ~/dotfiles/dotfiles/ripgrep/.ripgrep.conf ~/.ripgrep.conf
@@ -113,6 +121,17 @@
     src: "/home/rlommers/dotfiles/dotfiles/ripgrep/.ripgrep.conf"
     dest: "/home/rlommers/.ripgrep.conf"
     state: link
+    force: true
+  tags: [dotfiles]
+
+# ln -s ~/dotfiles/dotfiles/mc/ini ~/.config/mc/ini
+- name: Symlink ini file for Midnight Commander
+  become: false
+  ansible.builtin.file:
+    src: "/home/rlommers/dotfiles/dotfiles/mc/ini"
+    dest: "/home/rlommers/.config/mc/ini"
+    state: link
+    force: true
   tags: [dotfiles]
 
 - name: Add scripts directory to PATH
