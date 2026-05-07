@@ -13,6 +13,7 @@ Updates package cache, upgrades system packages, and installs essential tools fo
 
 - Sets timezone to `Europe/Amsterdam`
 - Adds git aliases: `st` (status), `core.editor` (vim)
+- Deploys midnight commander (`mc`) configuration to `~/.config/mc/ini` with sensible defaults
 
 ## Dependencies
 

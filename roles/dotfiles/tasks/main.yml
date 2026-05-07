@@ -124,16 +124,6 @@
     force: true
   tags: [dotfiles]
 
-# ln -s ~/dotfiles/dotfiles/mc/ini ~/.config/mc/ini
-- name: Symlink ini file for Midnight Commander
-  become: false
-  ansible.builtin.file:
-    src: "/home/rlommers/dotfiles/dotfiles/mc/ini"
-    dest: "/home/rlommers/.config/mc/ini"
-    state: link
-    force: true
-  tags: [dotfiles]
-
 - name: Add scripts directory to PATH
   become: true
   ansible.builtin.copy:

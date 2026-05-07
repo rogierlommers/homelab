@@ -47,3 +47,18 @@
     scope: global
     value: vim
   tags: [dotfiles]
+
+- name: Ensure midnight commander config directory exists
+  ansible.builtin.file:
+    path: ~/.config/mc
+    state: directory
+    mode: '0700'
+  tags: [dotfiles]
+
+- name: Deploy midnight commander configuration
+  ansible.builtin.template:
+    src: mc-ini.j2
+    dest: ~/.config/mc/ini
+    mode: '0600'
+    backup: true
+  tags: [dotfiles]
