@@ -33,3 +33,7 @@
 - name: Apply node-specific tasks for nas-nijmegen VM
   ansible.builtin.include_tasks: vm-nas-nijmegen.yml
   when: ansible_facts['nodename'] == "nas-nijmegen"
+
+- name: Apply node-specific tasks for sandbox VM
+  ansible.builtin.include_tasks: vm-sandbox.yml
+  when: ansible_facts['nodename'] == "sandbox"
