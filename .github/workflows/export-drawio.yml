@@ -22,6 +22,8 @@ jobs:
         run: |
           docker run --rm \
             -v "$PWD:/data" \
+            --shm-size=2g \
+            -e DRAWIO_DESKTOP_RUNNER_COMMAND_LINE_ARGS="--no-sandbox --disable-dev-shm-usage --disable-gpu" \
             rlespinasse/drawio-desktop-headless \
             --export \
             --format png \
