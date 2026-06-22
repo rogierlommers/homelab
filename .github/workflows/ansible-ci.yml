@@ -3,7 +3,11 @@ name: Ansible CI
 
 'on':
   push:
+    paths-ignore:
+      - docs/network-diagram.drawio
   pull_request:
+    paths-ignore:
+      - docs/network-diagram.drawio
 
 jobs:
   validate:
