@@ -27,8 +27,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install ansible-core yamllint
 
-      - name: Lint workflow YAML
-        run: yamllint .github/workflows/*.yml
+      - name: Lint YAML files
+        run: yamllint --strict $(find . -name '*.yml' -o -name '*.yaml' | grep -v '.github/workflows')
 
       - name: Install required Ansible collections
         run: ansible-galaxy collection install community.general
