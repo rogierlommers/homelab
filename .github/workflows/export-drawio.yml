@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 jobs:
-  export-and-commit:
+  export-diagram-and-commit:
     runs-on: ubuntu-latest
 
     steps:
