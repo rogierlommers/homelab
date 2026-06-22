@@ -10,7 +10,7 @@ name: Ansible CI
       - docs/network-diagram.drawio
 
 jobs:
-  validate:
+  validate-ansible-playbook:
     runs-on: ubuntu-latest
 
     steps:
