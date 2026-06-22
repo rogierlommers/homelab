@@ -28,7 +28,7 @@ jobs:
           pip install ansible-core yamllint
 
       - name: Lint YAML files
-        run: yamllint --strict $(find . -name '*.yml' -o -name '*.yaml' | grep -v '.github/workflows')
+        run: yamllint --strict $(find . -name '*.yml' -o -name '*.yaml' | grep -v '.github')
 
       - name: Install required Ansible collections
         run: ansible-galaxy collection install community.general
