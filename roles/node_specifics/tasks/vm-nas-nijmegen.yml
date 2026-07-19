@@ -95,6 +95,6 @@
     hour: "*"
     day: "*"
     weekday: "*"
-    job: "/home/rlommers/scripts/rhealthcheck.sh && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_healthchecks_nijmegen_uuid }}"
+    job: "/home/rlommers/scripts/healthcheck.sh && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_healthchecks_nijmegen_uuid }}"
     user: rlommers
   tags: [cron, healthcheck]
