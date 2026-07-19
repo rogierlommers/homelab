@@ -86,3 +86,15 @@
     job: "/home/rlommers/scripts/restic-backup-edwin.sh backup quiet && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_backup_edwin_uuid }}"
     user: rlommers
   tags: [cron, backup]
+
+- name: Cron job for nijmegen health check curl commands
+  ansible.builtin.cron:
+    name: "crontab for running nijmegen health check curl commands"
+    # every 5 minutes
+    minute: "*/5"
+    hour: "*"
+    day: "*"
+    weekday: "*"
+    job: "/home/rlommers/scripts/rhealthcheck.sh && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_healthchecks_nijmegen_uuid }}"
+    user: rlommers
+  tags: [cron, healthcheck]

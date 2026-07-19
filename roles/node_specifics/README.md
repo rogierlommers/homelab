@@ -31,6 +31,7 @@ Handles node-specific configuration including cron jobs, NFS setup, and Docker i
 - `hc_backup_hetzner_uuid` - Healthchecks UUID for backup ping
 - `hc_xml_feed_uuid` - Healthchecks UUID for XML feed ping
 - `hc_purge_hetzner_uuid` - Healthchecks UUID for prune/check ping
+- `hc_healthchecks_nijmegen_uuid` - Healthchecks UUID for nijmegen cURL healthchecks
 - `my_email` - Email address for notifications
 
 ## Dependencies
