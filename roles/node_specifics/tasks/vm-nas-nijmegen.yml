@@ -89,12 +89,12 @@
 
 - name: Cron job for nijmegen health check curl commands
   ansible.builtin.cron:
-    name: "crontab for running nijmegen health check curl commands"
+    name: "crontab for running external health check curl commands"
     # every 5 minutes
     minute: "*/5"
     hour: "*"
     day: "*"
     weekday: "*"
-    job: "crontab.sh nijmegen_health_checks"
+    job: "crontab.sh external_get_requests"
     user: rlommers
   tags: [cron, healthcheck]
