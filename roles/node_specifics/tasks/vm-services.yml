@@ -22,7 +22,7 @@
     hour: "3"
     day: "*"
     weekday: "*"
-    job: "crontab.sh backup_to_hetzner"
+    job: "~/scripts/crontab.sh backup_to_hetzner"
     user: rlommers
   tags: [cron, backup]
 
@@ -32,7 +32,7 @@
     # each hour at 15 minutes past the hour
     minute: "15"
     hour: "*"
-    job: "crontab.sh fetch_spotweb_rss"
+    job: "~/scripts/crontab.sh fetch_spotweb_rss"
     user: rlommers
   tags: [cron]
 

@@ -72,7 +72,7 @@
     day: "*"
     weekday: "0"
     user: rlommers
-    job: "crontab.sh purge_old_hetzner"
+    job: "~/scripts/crontab.sh purge_old_hetzner"
   tags: [cron, backup]
 
 - name: Cron job for backing up to Edwin
@@ -83,7 +83,7 @@
     hour: "3"
     day: "*"
     weekday: "*"
-    job: "crontab.sh backup_to_edwin"
+    job: "~/scripts/crontab.sh backup_to_edwin"
     user: rlommers
   tags: [cron, backup]
 
@@ -95,6 +95,6 @@
     hour: "*"
     day: "*"
     weekday: "*"
-    job: "crontab.sh external_get_requests"
+    job: "~/scripts/crontab.sh external_get_requests"
     user: rlommers
   tags: [cron, healthcheck]
