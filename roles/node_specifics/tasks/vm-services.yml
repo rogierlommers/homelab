@@ -22,7 +22,7 @@
     hour: "3"
     day: "*"
     weekday: "*"
-    job: "docker compose -f /srv/local/compose.yml down > /dev/null 2>&1 && /home/rlommers/scripts/restic-backup-hetzner.sh backup quiet && docker compose -f /srv/local/compose.yml up -d --remove-orphans > /dev/null 2>&1 && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_backup_hetzner_uuid }}"
+    job: "crontab.sh backup_to_hetzner"
     user: rlommers
   tags: [cron, backup]
 
@@ -32,7 +32,7 @@
     # each hour at 15 minutes past the hour
     minute: "15"
     hour: "*"
-    job: "/usr/bin/docker exec spotweb /usr/bin/curl --globoff --fail --silent --show-error 'http://services.hake-cod.ts.net:7004?page=rss&search\\%5Btree\\%5D=cat0_z3_d75,cat0_z3_d23&sortdir=DESC&sortby=stamp' -o /app/images/spotweb.xml && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_xml_feed_uuid }}"
+    job: "crontab.sh fetch_spotweb_rss"
     user: rlommers
   tags: [cron]
 

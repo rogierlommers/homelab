@@ -72,7 +72,7 @@
     day: "*"
     weekday: "0"
     user: rlommers
-    job: "/home/rlommers/scripts/restic-backup-hetzner.sh forget_and_check && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_purge_hetzner_uuid }}"
+    job: "crontab.sh purge_old_hetzner"
   tags: [cron, backup]
 
 - name: Cron job for backing up to Edwin
@@ -83,7 +83,7 @@
     hour: "3"
     day: "*"
     weekday: "*"
-    job: "/home/rlommers/scripts/restic-backup-edwin.sh backup quiet && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_backup_edwin_uuid }}"
+    job: "crontab.sh backup_to_edwin"
     user: rlommers
   tags: [cron, backup]
 
@@ -95,6 +95,6 @@
     hour: "*"
     day: "*"
     weekday: "*"
-    job: "/home/rlommers/scripts/healthcheck.sh && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ hc_healthchecks_nijmegen_uuid }}"
+    job: "crontab.sh nijmegen_health_checks"
     user: rlommers
   tags: [cron, healthcheck]
